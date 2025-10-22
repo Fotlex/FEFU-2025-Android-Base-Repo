@@ -1,9 +1,11 @@
-package com.example.animegenres
+package co.feip.fefu2025
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import java.util.Collections.max
+import kotlin.math.max
 
 class MyFlexBoxLayout @JvmOverloads constructor(
     context: Context,
@@ -26,13 +28,11 @@ class MyFlexBoxLayout @JvmOverloads constructor(
         var maxHeight = 0
         var currentLineHeight = 0
 
-        // Measure children - ИСПОЛЬЗУЕМ MarginLayoutParams для ВСЕХ детей
         val childCount = childCount
         for (i in 0 until childCount) {
             val child = getChildAt(i)
             if (child.visibility == View.GONE) continue
 
-            // Убеждаемся, что используем MarginLayoutParams
             val lp = child.layoutParams as? MarginLayoutParams ?: MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             child.layoutParams = lp
 
@@ -66,29 +66,34 @@ class MyFlexBoxLayout @JvmOverloads constructor(
         var y = paddingTop
         var currentLineHeight = 0
 
+        val itemSpacing = 4.dpToPx(context) // Добавляем отступ между элементами
+
         for (i in 0 until childCount) {
             val child = getChildAt(i)
             if (child.visibility == View.GONE) continue
 
-            val lp = child.layoutParams
+            val lp = child.layoutParams as? MarginLayoutParams ?: MarginLayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT
+            )
+
             val childWidth = child.measuredWidth
             val childHeight = child.measuredHeight
-            val leftMargin = if (lp is MarginLayoutParams) lp.leftMargin else 0
-            val topMargin = if (lp is MarginLayoutParams) lp.topMargin else 0
-            val rightMargin = if (lp is MarginLayoutParams) lp.rightMargin else 0
-            val bottomMargin = if (lp is MarginLayoutParams) lp.bottomMargin else 0
 
-
-            if (x + childWidth + rightMargin > width - paddingRight) {
+            if (x + childWidth > width - paddingRight) {
                 x = paddingLeft
-                y += currentLineHeight
+                y += currentLineHeight + itemSpacing
                 currentLineHeight = childHeight
             }
 
-            child.layout(x + leftMargin, y + topMargin, x + childWidth + leftMargin, y + childHeight + topMargin)
-            x += childWidth + leftMargin + rightMargin
-            currentLineHeight = Math.max(currentLineHeight, childHeight + topMargin + bottomMargin)
+            child.layout(x, y, x + childWidth, y + childHeight)
+            x += childWidth + itemSpacing
+            currentLineHeight = max(currentLineHeight, childHeight)
         }
+    }
+
+    fun Int.dpToPx(context: Context): Int {
+        return (this * context.resources.displayMetrics.density).toInt()
     }
 
     override fun generateLayoutParams(attrs: AttributeSet?): LayoutParams {

@@ -1,12 +1,12 @@
-package com.example.animegenres
+package co.feip.fefu2025
 
 import android.content.Context
-import android.graphics.Color
+
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.TextView
 import android.widget.FrameLayout
-import com.example.animegenres.R
+import co.feip.fefu2025.R
 
 class AnimeGenreView @JvmOverloads constructor(
     context: Context,
@@ -14,16 +14,15 @@ class AnimeGenreView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private var genreTextView: TextView
+    private val genreTextView: TextView
 
     init {
-// Инфлейтим XML-ресурс
         LayoutInflater.from(context).inflate(R.layout.view_anime_genre, this, true)
         genreTextView = findViewById(R.id.genreTextView)
     }
 
     fun setGenre(name: String, color: Int) {
         genreTextView.text = name
-        setBackgroundColor(color)
+        genreTextView.background.setTint(color)
     }
 }
