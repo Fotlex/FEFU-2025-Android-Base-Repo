@@ -1,4 +1,4 @@
-package com.example.dz1android
+package com.example.animegenres
 
 import org.junit.Test
 

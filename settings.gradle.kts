@@ -13,6 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "dz1android"
+rootProject.name = "animegenres"
 include(":app")
- 

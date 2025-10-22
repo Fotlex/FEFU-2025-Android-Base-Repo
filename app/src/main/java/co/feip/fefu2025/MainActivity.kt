@@ -1,85 +1,45 @@
-package com.example.dz1android
+package com.example.animegenres
 
+import android.graphics.Color
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.dz1android.ui.theme.Dz1androidTheme
-import android.content.Intent
-import android.content.IntentFilter
-import android.net.ConnectivityManager
-
+import android.view.View
 import android.widget.Button
-import android.widget.TextView
-import androidx.compose.material3.Button
+import androidx.appcompat.app.AppCompatActivity
+import java.util.*
 
+class MainActivity : AppCompatActivity() {
 
-class MainActivity : ComponentActivity() {
+    private val genres = listOf(
+        Pair("Романтика", Color.RED),
+        Pair("Экшен", Color.BLUE),
+        Pair("Комедия", Color.GREEN),
+        Pair("Фантастика", Color.YELLOW),
+        Pair("Ужасы", Color.MAGENTA),
+        Pair("Приключения", Color.CYAN),
+        Pair("Драма", Color.LTGRAY)
+    )
 
-    private lateinit var textViewCounter: TextView
-    private var counter = 0
+    private lateinit var flexBoxLayout: MyFlexBoxLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        textViewCounter = findViewById(R.id.textViewCounter)
-        textViewCounter.text = counter.toString()
-        textViewCounter.setOnClickListener {
-            counter++
-            textViewCounter.text = counter.toString()
+        flexBoxLayout = findViewById(R.id.flexBoxLayout)
+        val addButton: Button = findViewById(R.id.addButton)
+
+        addButton.setOnClickListener {
+            addGenre()
         }
-
-        val button = findViewById<Button>(R.id.buttonSecondActivity)
-        button.setOnClickListener {
-            val intent = Intent(this, SecondActivity::class.java)
-            startActivity(intent)
-        }
-        }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt("counter", counter)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        counter = savedInstanceState.getInt("counter")
-        textViewCounter.text = counter.toString()
-    }
+    private fun addGenre() {
+        val randomIndex = Random().nextInt(genres.size)
+        val genre = genres[randomIndex]
 
-    private val networkReceiver = NetworkChangeReceiver()
-    private val networkIntentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-    override fun onResume() {
-        super.onResume()
-        registerReceiver(networkReceiver, networkIntentFilter)
-    }
+        val genreView = AnimeGenreView(this)
+        genreView.setGenre(genre.first, genre.second)
 
-    override fun onPause() {
-        super.onPause()
-        unregisterReceiver(networkReceiver)
-    }
-
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Dz1androidTheme {
-        Greeting("Android")
+        flexBoxLayout.addView(genreView)
     }
 }
