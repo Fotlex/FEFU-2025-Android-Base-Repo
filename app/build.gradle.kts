@@ -88,4 +88,6 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.1.0")
     implementation ("com.google.android.flexbox:flexbox:3.0.0")
     implementation ("androidx.cardview:cardview:1.0.0")
+    implementation ("com.google.android.material:material:1.6.0")
+    implementation ("androidx.compose.foundation:foundation:1.4.0")
 }
